@@ -80,7 +80,7 @@ download()
 	SERVER="http://q${SERVER}.baidu.com/it/"
 	if [[ ! -f "${MAPS}/${1},${2}.png" ]]; then
 		$CURL -L -s -o "${MAPS}/${1},${2}.png"\
-			"${SERVER}u=x=${1};y=${2};z=${3};v=${5};type=${4}&fm={$6}" &
+			"${SERVER}u=x=${1};y=${2};z=${3};v=${5};type=${4}&fm=${6}" &
 	fi
 }
 
