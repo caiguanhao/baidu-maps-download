@@ -17,7 +17,7 @@ Type can be ``web`` (default), ``web-alt`` (bigger font size, good for printing 
 
 Start Point (``sp``) is the top-left point of the map while End Point (``ep``) is the bottom-right point.
 
-    bash point2pieces.sh sp_x sp_y ep_x ep_y [level=12 [type=web]]
+    bash points2pieces.sh sp_x sp_y ep_x ep_y [level=12 [type=web]]
 
 #### Center Point
 
@@ -36,7 +36,7 @@ Example
 
 Download (part of) map of Guangzhou in one command:
 
-    bash point2pieces.sh 12550000.00, 2650000.00 12650000.00, 2550000.00 && bash pieces2one.sh
+    bash points2pieces.sh 12550000.00, 2650000.00 12650000.00, 2550000.00 && bash pieces2one.sh
 
 or
 
