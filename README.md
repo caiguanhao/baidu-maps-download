@@ -15,15 +15,18 @@ The ``maps`` directory will be emptied each time excuting this script.
 
     bash point2pieces.sh sp_x sp_y ep_x ep_y [level=12 [type=web]]
 
-Example:
-
-    bash point2pieces.sh 12550000.00, 2650000.00 12650000.00, 2550000.00
-
 ### Concatenate map pieces
 
 Concatenate map pieces in ``maps`` directory to one PNG image file named ``done.png``. Map pieces and intermediate files will be deleted.
 
     bash pieces2one.sh
+
+Example
+-------
+
+Download (part of) map of Guangzhou in one command:
+
+    bash point2pieces.sh 12550000.00, 2650000.00 12650000.00, 2550000.00 && bash pieces2one.sh
 
 Requirements
 ------------
@@ -35,8 +38,8 @@ Requirements
 See Also
 --------
 
-* [Baidu Maps Coordinates Utils](https://github.com/caiguanhao/baidu-maps-coord-utils)
-
+* [Baidu Maps Coordinates Utils](https://github.com/caiguanhao/baidu-maps-coord-utils) (includes coordinates to point conversion)
+* [BaiduMapsDownloader in Java](https://github.com/java-MagicWang/BaiduMapDownloader/blob/master/MapDownloader.java)
 
 Developer
 ---------
