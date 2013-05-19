@@ -36,6 +36,10 @@ case $6 in
 		TYPE=sate
 		MODE=46
 		;;
+	web-alt)
+		TYPE=web
+		MODE=41
+		;;
 	*)
 		TYPE=web
 		MODE=44

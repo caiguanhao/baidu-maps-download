@@ -8,10 +8,11 @@ Usage
 
 ### Download map pieces
 
-Download map pieces to ``maps`` directory.
-Start Point (sp) is the top-left point of the map while End Point (ep) is the bottom-right point.
-Level ranges from 1 to 19 and defaults to 12. Higher level means a more detailed map with more image pieces to be downloaded. Type can be ``web`` (default) or ``sate`` (satellite image).
-The ``maps`` directory will be emptied each time excuting this script.
+Download map pieces to ``maps`` directory. The ``maps`` directory will be emptied each time excuting this script.
+
+Start Point (``sp``) is the top-left point of the map while End Point (``ep``) is the bottom-right point.
+Level ranges from 1 to 19 and defaults to 12. Higher level means a more detailed map with more image pieces to be downloaded.
+Type can be ``web`` (default), ``web-alt`` (bigger font size, good for printing and mobile browsing) or ``sate`` (satellite image).
 
     bash point2pieces.sh sp_x sp_y ep_x ep_y [level=12 [type=web]]
 
