@@ -11,7 +11,7 @@ Usage
 Download map pieces to ``maps`` directory. The ``maps`` directory will be emptied each time excuting this script.
 
 Level ranges from 1 to 19 and defaults to 12. Higher level means a more detailed map with more image pieces to be downloaded.
-Type can be ``web`` (default), ``web-alt`` (bigger font size, good for printing and mobile browsing) or ``sate`` (satellite image).
+Type can be ``web`` (default), ``web-alt`` (bigger font size, good for printing and mobile browsing, available for ``level`` from 10 to 18) or ``sate`` (satellite image).
 
 #### Start Point and End Point
 

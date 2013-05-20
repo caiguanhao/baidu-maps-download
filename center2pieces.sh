@@ -44,7 +44,11 @@ case $4 in
 		;;
 	web-alt)
 		TYPE=web
-		MODE=41
+		if [[ $LEVEL -gt 9 ]] && [[ $LEVEL -lt 19 ]]; then
+			MODE=41
+		else
+			MODE=44
+		fi
 		;;
 	*)
 		TYPE=web
