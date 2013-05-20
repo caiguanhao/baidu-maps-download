@@ -25,7 +25,10 @@ Get the map of area surrounds the Center Point (``cp``).
 You can specify the ``width`` and ``height`` of the map.
 This script will output a ``crop`` option which can be used as argument of ``pieces2one.sh`` script.
 
-    bash center2pieces.sh cp_x cp_y [level=12 [type=web [width=2000 [height=2000]]]]
+    bash center2pieces.sh [OPTION] cp_x cp_y [level=12 [type=web [width=2000 [height=2000]]]]
+    
+    Options:
+        --dry-run        Show list of commands instead of executing them.
 
 ### Concatenate map pieces
 

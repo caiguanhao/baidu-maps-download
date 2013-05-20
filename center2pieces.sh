@@ -6,6 +6,18 @@ BC=$(which bc)
 
 CURL=$(which curl)
 
+DRY_RUN=""
+for arg in "$@"
+do
+	case "$arg" in
+		--dry-run)
+			shift
+			DRY_RUN="echo"
+			echo "#!/bin/bash"
+			;;
+	esac
+done
+
 ARG_1=${1//,/}
 ARG_2=$2
 
@@ -59,9 +71,9 @@ VER="015"
 MAPS="`pwd`/maps"
 
 if [[ ! -d ${MAPS} ]]; then
-	mkdir "${MAPS}"
+	$DRY_RUN mkdir "${MAPS}"
 else
-	rm -f "${MAPS}"/*
+	$DRY_RUN rm -f "${MAPS}"/*
 fi
 
 calc()
@@ -83,9 +95,15 @@ download()
 {
 	SERVER=$((RANDOM%8+1))
 	SERVER="http://q${SERVER}.baidu.com/it/"
-	if [[ ! -f "${MAPS}/${1},${2}.png" ]]; then
-		$CURL -L -s -o "${MAPS}/${1},${2}.png"\
-			"${SERVER}u=x=${1};y=${2};z=${3};v=${5};type=${4}&fm=${6}" &
+
+	if [[ ${#DRY_RUN} -eq 0 ]]; then
+		if [[ ! -f "${MAPS}/${1},${2}.png" ]]; then
+			$CURL -L -s -o "${MAPS}/${1},${2}.png"\
+				"${SERVER}u=x=${1};y=${2};z=${3};v=${5};type=${4}&fm=${6}" &
+		fi
+	else
+		echo $CURL -L -s -o \""${MAPS}/${1},${2}.png\""\
+				\""${SERVER}u=x=${1};y=${2};z=${3};v=${5};type=${4}&fm=${6}\"" \&
 	fi
 }
 
@@ -140,9 +158,14 @@ for (( J=$T1; J<=$T3; J++ )) ; do
 	for (( K=$T2; K<=$T4; K++ )) ; do
 		download $J $K $LEVEL $TYPE $VER $MODE
 	done
-	wait
+
+	$DRY_RUN wait
 done
 
-wait
+$DRY_RUN wait
 
-echo "${WIDTH}x${HEIGHT}+${OFFSET_X}+${OFFSET_Y}"
+if [[ ${#DRY_RUN} -eq 0 ]]; then
+	echo "${WIDTH}x${HEIGHT}+${OFFSET_X}+${OFFSET_Y}"
+else
+	echo "$(which bash) pieces2one.sh ${WIDTH}x${HEIGHT}+${OFFSET_X}+${OFFSET_Y}"
+fi
