@@ -39,7 +39,10 @@ Concatenate map pieces in ``maps`` directory to one PNG image file named ``done.
 You can specify [``crop``](http://www.imagemagick.org/Usage/crop/) option for the ``convert`` process.
 Map pieces and intermediate files will be deleted.
 
-    bash pieces2one.sh [crop]
+    bash pieces2one.sh [OPTION] [crop]
+    
+    Options:
+        --dry-run        Show list of commands instead of executing them.
 
 Example
 -------

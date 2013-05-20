@@ -6,6 +6,18 @@ CONVERT=$(which convert)
 
 MAPS="`pwd`/maps"
 
+DRY_RUN=""
+for arg in "$@"
+do
+	case "$arg" in
+		--dry-run)
+			shift
+			DRY_RUN="echo"
+			echo "#!/bin/bash"
+			;;
+	esac
+done
+
 if [[ ! -d ${MAPS} ]]; then
 	echo "${MAPS} does not exist."
 	echo "Run point2pieces.sh first."
@@ -38,18 +50,18 @@ ROWS=()
 
 if [[ ${#X[@]} -le 1 ]]; then
 	PIECES=($(tr ' ' '\n' <<< "${PIECES[@]}" | sort -nru | tr '\n' ' '))
-	$CONVERT ${PIECES[@]} -append ${CROP} "${MAPS}/done.png"
+	$DRY_RUN $CONVERT ${PIECES[@]} -append ${CROP} "${MAPS}/done.png"
 else
 	for (( i = 0; i < ${#Y[@]}; i++ )); do
 		PIECES=$(find "${MAPS}" -maxdepth 1 -name "*,${Y[$i]}.png")
 		ROW="${MAPS}/row${i}.png"
-		$CONVERT ${PIECES} +append $ROW
+		$DRY_RUN $CONVERT ${PIECES} +append $ROW
 		ROWS[${#ROWS[@]}]=$ROW
 	done
 
-	$CONVERT ${ROWS[@]} -append ${CROP} "${MAPS}/done.png"
+	$DRY_RUN $CONVERT ${ROWS[@]} -append ${CROP} "${MAPS}/done.png"
 
-	rm -f ${ROWS[@]}
+	$DRY_RUN rm -f ${ROWS[@]}
 fi
 
-rm -f ${PIECES[@]}
+$DRY_RUN rm -f ${PIECES[@]}
