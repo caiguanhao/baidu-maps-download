@@ -6,6 +6,18 @@ BC=$(which bc)
 
 CURL=$(which curl)
 
+DRY_RUN=""
+for arg in "$@"
+do
+	case "$arg" in
+		--dry-run)
+			shift
+			DRY_RUN="echo"
+			echo "#!/bin/bash"
+			;;
+	esac
+done
+
 ARG_1=${1//,/}
 ARG_2=$2
 ARG_3=${3//,/}
@@ -38,7 +50,11 @@ case $6 in
 		;;
 	web-alt)
 		TYPE=web
-		MODE=41
+		if [[ $LEVEL -gt 9 ]] && [[ $LEVEL -lt 19 ]]; then
+			MODE=41
+		else
+			MODE=44
+		fi
 		;;
 	*)
 		TYPE=web
@@ -51,9 +67,9 @@ VER="015"
 MAPS="`pwd`/maps"
 
 if [[ ! -d ${MAPS} ]]; then
-	mkdir "${MAPS}"
+	$DRY_RUN mkdir "${MAPS}"
 else
-	rm -f "${MAPS}"/*
+	$DRY_RUN rm -f "${MAPS}"/*
 fi
 
 ceil()
@@ -78,9 +94,15 @@ download()
 {
 	SERVER=$((RANDOM%8+1))
 	SERVER="http://q${SERVER}.baidu.com/it/"
-	if [[ ! -f "${MAPS}/${1},${2}.png" ]]; then
-		$CURL -L -s -o "${MAPS}/${1},${2}.png"\
-			"${SERVER}u=x=${1};y=${2};z=${3};v=${5};type=${4}&fm=${6}" &
+
+	if [[ ${#DRY_RUN} -eq 0 ]]; then
+		if [[ ! -f "${MAPS}/${1},${2}.png" ]]; then
+			$CURL -L -s -o "${MAPS}/${1},${2}.png"\
+				"${SERVER}u=x=${1};y=${2};z=${3};v=${5};type=${4}&fm=${6}" &
+		fi
+	else
+		echo $CURL -L -s -o \""${MAPS}/${1},${2}.png\""\
+				\""${SERVER}u=x=${1};y=${2};z=${3};v=${5};type=${4}&fm=${6}\"" \&
 	fi
 }
 
@@ -105,8 +127,8 @@ elif [[ $START_BLOCK_X -lt $END_BLOCK_X ]] && [[ $START_BLOCK_Y -gt $END_BLOCK_Y
 		for (( K=$START_BLOCK_X; K<$END_BLOCK_X; K++ )) ; do
 			download $K $J $LEVEL $TYPE $VER $MODE
 		done
-		wait
+		$DRY_RUN wait
 	done
 fi
 
-wait
+$DRY_RUN wait

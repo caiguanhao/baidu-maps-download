@@ -17,7 +17,10 @@ Type can be ``web`` (default), ``web-alt`` (bigger font size, good for printing 
 
 Start Point (``sp``) is the top-left point of the map while End Point (``ep``) is the bottom-right point.
 
-    bash points2pieces.sh sp_x sp_y ep_x ep_y [level=12 [type=web]]
+    bash points2pieces.sh [OPTION] sp_x sp_y ep_x ep_y [level=12 [type=web]]
+    
+    Options:
+        --dry-run        Show list of commands instead of executing them.
 
 #### Center Point
 
