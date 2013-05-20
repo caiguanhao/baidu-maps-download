@@ -31,13 +31,13 @@ for (( i = 0; i < ${#PIECES[@]}; i++ )); do
 	X[${#X[@]}]=${N%%,*}
 	Y[${#Y[@]}]=${N##*,}
 done
-X=($(tr ' ' '\n' <<< "${X[@]}" | sort -u | tr '\n' ' '))
-Y=($(tr ' ' '\n' <<< "${Y[@]}" | sort -ru | tr '\n' ' '))
+X=($(tr ' ' '\n' <<< "${X[@]}" | sort -nu | tr '\n' ' '))
+Y=($(tr ' ' '\n' <<< "${Y[@]}" | sort -nru | tr '\n' ' '))
 
 ROWS=()
 
 if [[ ${#X[@]} -le 1 ]]; then
-	PIECES=($(tr ' ' '\n' <<< "${PIECES[@]}" | sort -ru | tr '\n' ' '))
+	PIECES=($(tr ' ' '\n' <<< "${PIECES[@]}" | sort -nru | tr '\n' ' '))
 	$CONVERT ${PIECES[@]} -append ${CROP} "${MAPS}/done.png"
 else
 	for (( i = 0; i < ${#Y[@]}; i++ )); do
