@@ -18,6 +18,11 @@ if [[ ${#PIECES[@]} -eq 0 ]]; then
 	exit
 fi
 
+CROP=""
+if [[ ${#1} -gt 0 ]]; then
+	CROP=" -crop ${1} "
+fi
+
 X=()
 Y=()
 for (( i = 0; i < ${#PIECES[@]}; i++ )); do
@@ -33,7 +38,7 @@ ROWS=()
 
 if [[ ${#X[@]} -le 1 ]]; then
 	PIECES=($(tr ' ' '\n' <<< "${PIECES[@]}" | sort -ru | tr '\n' ' '))
-	$CONVERT ${PIECES[@]} -append "${MAPS}/done.png"
+	$CONVERT ${PIECES[@]} -append ${CROP} "${MAPS}/done.png"
 else
 	for (( i = 0; i < ${#Y[@]}; i++ )); do
 		PIECES=$(find "${MAPS}" -maxdepth 1 -name "*,${Y[$i]}.png")
@@ -42,7 +47,7 @@ else
 		ROWS[${#ROWS[@]}]=$ROW
 	done
 
-	$CONVERT ${ROWS[@]} -append "${MAPS}/done.png"
+	$CONVERT ${ROWS[@]} -append ${CROP} "${MAPS}/done.png"
 
 	rm -f ${ROWS[@]}
 fi

@@ -21,26 +21,30 @@ Start Point (``sp``) is the top-left point of the map while End Point (``ep``) i
 
 #### Center Point
 
-Get the map of area surrounds the Center Point (``cp``). ``width`` and ``height`` define the minimum size of the map.
+Get the map of area surrounds the Center Point (``cp``).
+You can specify the ``width`` and ``height`` of the map.
+This script will output a ``crop`` option which can be used as argument of ``pieces2one.sh`` script.
 
     bash center2pieces.sh cp_x cp_y [level=12 [type=web [width=2000 [height=2000]]]]
 
 ### Concatenate map pieces
 
-Concatenate map pieces in ``maps`` directory to one PNG image file named ``done.png``. Map pieces and intermediate files will be deleted.
+Concatenate map pieces in ``maps`` directory to one PNG image file named ``done.png``.
+You can specify [``crop``](http://www.imagemagick.org/Usage/crop/) option for the ``convert`` process.
+Map pieces and intermediate files will be deleted.
 
-    bash pieces2one.sh
+    bash pieces2one.sh [crop]
 
 Example
 -------
 
-Download (part of) map of Guangzhou in one command:
+**Download (part of) map of Guangzhou in one command:**
 
     bash points2pieces.sh 12550000.00, 2650000.00 12650000.00, 2550000.00 && bash pieces2one.sh
 
-or
+**Download a 1000x1000px map around a certain point:**
 
-    bash center2pieces.sh 12616000.00, 2628000.00 12 web-alt 1000 1000 && bash pieces2one.sh
+    bash center2pieces.sh 12616085.15, 2628677.18 15 web-alt 1000 1000 | xargs bash pieces2one.sh
 
 Requirements
 ------------

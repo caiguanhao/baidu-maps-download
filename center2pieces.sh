@@ -19,8 +19,8 @@ else
 	exit 1
 fi
 
-if [[ $3 =~ ^[0-9]+$ ]] && [[ $5 -le 19 ]] && [[ $5 -ge 1 ]]; then
-	LEVEL=$5
+if [[ $3 =~ ^[0-9]+$ ]] && [[ $3 -le 19 ]] && [[ $3 -ge 1 ]]; then
+	LEVEL=$3
 else
 	LEVEL=12
 fi
@@ -125,6 +125,17 @@ fi
 ceil T4
 calc T4 = "${E[1]} + ${T4} "
 
+calc OFFSET_X = "($POINT_X / $ZOOM_FACTOR - $T1) * $TILE_SIZE"
+calc OFFSET_X = "$OFFSET_X - $WIDTH / 2"
+ceil OFFSET_X
+
+calc OFFSET_Y = "($T4 - $POINT_Y / $ZOOM_FACTOR) * $TILE_SIZE"
+calc OFFSET_Y = "$OFFSET_Y - $HEIGHT / 2"
+if [[ $(echo "( $T4 - $T2 ) % 2" | $BC) -eq 1 ]]; then
+	calc OFFSET_Y = "$OFFSET_Y + $TILE_SIZE"
+fi
+ceil OFFSET_Y
+
 for (( J=$T1; J<=$T3; J++ )) ; do
 	for (( K=$T2; K<=$T4; K++ )) ; do
 		download $J $K $LEVEL $TYPE $VER $MODE
@@ -133,3 +144,5 @@ for (( J=$T1; J<=$T3; J++ )) ; do
 done
 
 wait
+
+echo "${WIDTH}x${HEIGHT}+${OFFSET_X}+${OFFSET_Y}"
