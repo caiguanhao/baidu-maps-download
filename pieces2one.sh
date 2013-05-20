@@ -49,13 +49,13 @@ Y=($(tr ' ' '\n' <<< "${Y[@]}" | sort -nru | tr '\n' ' '))
 ROWS=()
 
 if [[ ${#X[@]} -le 1 ]]; then
-	PIECES=($(tr ' ' '\n' <<< "${PIECES[@]}" | sort -nru | tr '\n' ' '))
-	$DRY_RUN $CONVERT ${PIECES[@]} -append ${CROP} "${MAPS}/done.png"
+	ALL_PIECES=($(tr ' ' '\n' <<< "${PIECES[@]}" | sort -nru | tr '\n' ' '))
+	$DRY_RUN $CONVERT ${ALL_PIECES[@]} -append ${CROP} "${MAPS}/done.png"
 else
 	for (( i = 0; i < ${#Y[@]}; i++ )); do
-		PIECES=$(find "${MAPS}" -maxdepth 1 -name "*,${Y[$i]}.png")
+		ALL_PIECES=$(find "${MAPS}" -maxdepth 1 -name "*,${Y[$i]}.png")
 		ROW="${MAPS}/row${i}.png"
-		$DRY_RUN $CONVERT ${PIECES} +append $ROW
+		$DRY_RUN $CONVERT ${ALL_PIECES} +append $ROW
 		ROWS[${#ROWS[@]}]=$ROW
 	done
 
