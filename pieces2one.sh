@@ -53,9 +53,12 @@ if [[ ${#X[@]} -le 1 ]]; then
 	$DRY_RUN $CONVERT ${ALL_PIECES[@]} -append ${CROP} "${MAPS}/done.png"
 else
 	for (( i = 0; i < ${#Y[@]}; i++ )); do
-		ALL_PIECES=$(find "${MAPS}" -maxdepth 1 -name "*,${Y[$i]}.png")
+		ALL_PIECES=()
+		for EX in "${X[@]}"; do
+			ALL_PIECES=( "${ALL_PIECES[@]}" "${MAPS}/${EX},${Y[$i]}.png" )
+		done
 		ROW="${MAPS}/row${i}.png"
-		$DRY_RUN $CONVERT ${ALL_PIECES} +append $ROW
+		$DRY_RUN $CONVERT ${ALL_PIECES[@]} +append $ROW
 		ROWS[${#ROWS[@]}]=$ROW
 	done
 
