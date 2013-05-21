@@ -1,7 +1,7 @@
 Baidu Maps Download
 ===================
 
-Download Baidu Maps to one PNG image file.
+Download Baidu Maps to one PNG image file. Points used here are not coordinates. You may use another BASH tool called [Baidu Maps Coordinates Utils](https://github.com/caiguanhao/baidu-maps-coord-utils) to convert coordinates to points.
 
 Usage
 -----
@@ -44,8 +44,8 @@ Map pieces and intermediate files will be deleted.
     Options:
         --dry-run        Show list of commands instead of executing them.
 
-Example
--------
+Examples
+--------
 
 **Download (part of) map of Guangzhou in one command:**
 
@@ -58,9 +58,23 @@ Example
 Requirements
 ------------
 
-* cURL
-* ImageMagick
-* bc
+* [cURL](http://curl.haxx.se/)
+* [ImageMagick](http://www.imagemagick.org/)
+* [bc](http://www.gnu.org/software/bc/)
+
+Bugs
+----
+
+* Maps in level 1 to level 3 are not continuous.
+
+Optimizations
+-------------
+
+You can reduce the file size (up to 50%) of the output PNG image files by using [pngcrush](http://pmt.sourceforge.net/pngcrush/) and/or [optipng](http://optipng.sourceforge.net/):
+
+    (cd maps && pngcrush -rem cHRM -rem gAMA -rem iCCP -rem sRGB -q done.png done_o.png && mv done_o.png done.png)
+    
+    (cd maps && optipng -quiet -fix -o4 done.png)
 
 See Also
 --------
@@ -72,3 +86,8 @@ Developer
 ---------
 
 * caiguanhao
+
+使用方法
+--------
+
+用 Baidu Maps Coordinates Utils 来将坐标转换为点，你可以指定要下载的地图的起始和终止点（即左上角和右下角的点），也可以指定一个中心点和地图大小来下载地图碎片，下载完毕后可执行 pieces2one.sh 将碎片合并成一张大地图。请参考上面的示例命令。
