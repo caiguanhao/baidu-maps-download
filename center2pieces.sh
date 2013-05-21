@@ -130,8 +130,10 @@ ceil T1
 calc T1 = "${E[0]} - ${T1} "
 
 calc T2 = "( $HEIGHT / 2 - ${E[3]} ) / $TILE_SIZE"
+T2R=$T2
 ceil T2
 calc T2 = "${E[1]} - ${T2} "
+calc T2R = "${E[1]} - ${T2R}"
 
 calc T3 = "( $WIDTH / 2 + ${E[2]} ) / $TILE_SIZE"
 if [[ $(echo "$T3 < 1" | $BC) -eq 1 ]]; then
@@ -144,8 +146,10 @@ calc T4 = "( $HEIGHT / 2 + ${E[3]} ) / $TILE_SIZE"
 if [[ $(echo "$T4 < 1" | $BC) -eq 1 ]]; then
 	T4=0
 fi
+T4R=$T4
 ceil T4
 calc T4 = "${E[1]} + ${T4} "
+calc T4R = "${E[1]} + ${T4R}"
 
 calc OFFSET_X = "($POINT_X / $ZOOM_FACTOR - $T1) * $TILE_SIZE"
 calc OFFSET_X = "$OFFSET_X - $WIDTH / 2"
@@ -153,9 +157,12 @@ ceil OFFSET_X
 
 calc OFFSET_Y = "($T4 - $POINT_Y / $ZOOM_FACTOR) * $TILE_SIZE"
 calc OFFSET_Y = "$OFFSET_Y - $HEIGHT / 2"
-if [[ $(echo "( $T4 - $T2 ) % 2" | $BC) -eq 1 ]]; then
+
+calc TX = "$T4R - $T2R"
+if [[ $(echo "0${TX/.*} % 2" | $BC) -eq 1 ]]; then
 	calc OFFSET_Y = "$OFFSET_Y + $TILE_SIZE"
 fi
+
 ceil OFFSET_Y
 
 for (( J=$T1; J<=$T3; J++ )) ; do
