@@ -48,7 +48,7 @@ else
 fi
 
 VER_DEFAULT="015"
-VER=VER_DEFAULT
+VER=$VER_DEFAULT
 
 case $4 in
 	sate)
