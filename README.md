@@ -20,8 +20,9 @@ Start Point (``sp``) is the top-left point of the map while End Point (``ep``) i
     bash points2pieces.sh [OPTION] sp_x sp_y ep_x ep_y [level=12 [type=web]]
     
     Options:
-        --dry-run        Show list of commands instead of executing them.
-        --with-traffic   Also download the traffic layer.
+        --dry-run          Show list of commands instead of executing them.
+        --with-traffic     Also download the traffic layer.
+        --with-transport   Also download the transport layer. Valid if type is sate.
 
 #### Center Point
 
@@ -32,8 +33,9 @@ This script will output a ``crop`` option which can be used as argument of ``pie
     bash center2pieces.sh [OPTION] cp_x cp_y [level=12 [type=web [width=2000 [height=2000]]]]
     
     Options:
-        --dry-run        Show list of commands instead of executing them.
-        --with-traffic   Also download the traffic layer.
+        --dry-run          Show list of commands instead of executing them.
+        --with-traffic     Also download the traffic layer.
+        --with-transport   Also download the transport layer. Valid if type is sate.
 
 ### Concatenate map pieces
 
