@@ -7,6 +7,7 @@ BC=$(which bc)
 CURL=$(which curl)
 
 DRY_RUN=""
+WITH_TRAFFIC=0
 for arg in "$@"
 do
 	case "$arg" in
@@ -14,6 +15,10 @@ do
 			shift
 			DRY_RUN="echo"
 			echo "#!/bin/bash"
+			;;
+		--with-traffic)
+			shift
+			WITH_TRAFFIC=1
 			;;
 	esac
 done
@@ -47,6 +52,9 @@ case $4 in
 		if [[ $LEVEL -gt 9 ]] && [[ $LEVEL -lt 19 ]]; then
 			MODE=41
 		else
+			MODE=44
+		fi
+		if [[ $WITH_TRAFFIC -eq 1 ]]; then
 			MODE=44
 		fi
 		;;
@@ -99,15 +107,24 @@ download()
 {
 	SERVER=$((RANDOM%8+1))
 	SERVER="http://q${SERVER}.baidu.com/it/"
+	TRAFFIC="http://its.map.baidu.com:8002/traffic/TrafficTileService?time=0&label=web2D"
 
 	if [[ ${#DRY_RUN} -eq 0 ]]; then
 		if [[ ! -f "${MAPS}/${1},${2}.png" ]]; then
 			$CURL -L -s -o "${MAPS}/${1},${2}.png"\
 				"${SERVER}u=x=${1/-/M};y=${2/-/M};z=${3};v=${5};type=${4}&fm=${6}" &
+			if [[ $WITH_TRAFFIC -eq 1 ]]; then
+				$CURL -L -s -o "${MAPS}/${1},${2}.png.traffic"\
+					"${TRAFFIC}&v=${5}&level=${3}&x=${1/-/M}&y=${2/-/M}" &
+			fi
 		fi
 	else
 		echo $CURL -L -s -o \""${MAPS}/${1},${2}.png\""\
 				\""${SERVER}u=x=${1/-/M};y=${2/-/M};z=${3};v=${5};type=${4}&fm=${6}\"" \&
+		if [[ $WITH_TRAFFIC -eq 1 ]]; then
+			echo $CURL -L -s -o \""${MAPS}/${1},${2}.png.traffic\""\
+					\""${TRAFFIC}&v=${5}&level=${3}&x=${1/-/M}&y=${2/-/M}\"" \&
+		fi
 	fi
 }
 
