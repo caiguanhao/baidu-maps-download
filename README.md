@@ -21,6 +21,7 @@ Start Point (``sp``) is the top-left point of the map while End Point (``ep``) i
     
     Options:
         --dry-run        Show list of commands instead of executing them.
+        --with-traffic   Also download the traffic layer.
 
 #### Center Point
 
@@ -32,12 +33,13 @@ This script will output a ``crop`` option which can be used as argument of ``pie
     
     Options:
         --dry-run        Show list of commands instead of executing them.
+        --with-traffic   Also download the traffic layer.
 
 ### Concatenate map pieces
 
 Concatenate map pieces in ``maps`` directory to one PNG image file named ``done.png``.
 You can specify [``crop``](http://www.imagemagick.org/Usage/crop/) option for the ``convert`` process.
-Map pieces and intermediate files will be deleted.
+All layers will merge automatically. Map pieces, layers and intermediate files will be deleted.
 
     bash pieces2one.sh [OPTION] [crop]
     
