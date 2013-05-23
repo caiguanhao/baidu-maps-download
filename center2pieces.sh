@@ -8,6 +8,7 @@ CURL=$(which curl)
 
 DRY_RUN=""
 WITH_TRAFFIC=0
+WITH_TRANSPORT=0
 for arg in "$@"
 do
 	case "$arg" in
@@ -19,6 +20,10 @@ do
 		--with-traffic)
 			shift
 			WITH_TRAFFIC=1
+			;;
+		--with-transport)
+			shift
+			WITH_TRANSPORT=1
 			;;
 	esac
 done
@@ -42,7 +47,8 @@ else
 	LEVEL=12
 fi
 
-VER="015"
+VER_DEFAULT="015"
+VER=VER_DEFAULT
 
 case $4 in
 	sate)
@@ -60,10 +66,12 @@ case $4 in
 		if [[ $WITH_TRAFFIC -eq 1 ]]; then
 			MODE=44
 		fi
+		WITH_TRANSPORT=0
 		;;
 	*)
 		TYPE=web
 		MODE=44
+		WITH_TRANSPORT=0
 		;;
 esac
 
@@ -118,6 +126,10 @@ download()
 				$CURL -L -s -o "${MAPS}/${1},${2}.png.traffic"\
 					"${TRAFFIC}&v=${5}&level=${3}&x=${1/-/M}&y=${2/-/M}" &
 			fi
+			if [[ $WITH_TRANSPORT -eq 1 ]]; then
+				$CURL -L -s -o "${MAPS}/${1},${2}.png.transport"\
+					"${SERVER}u=x=${1/-/M};y=${2/-/M};z=${3};v=${VER_DEFAULT};type=trans&fm=47" &
+			fi
 		fi
 	else
 		echo $CURL -L -s -o \""${MAPS}/${1},${2}.png\""\
@@ -125,6 +137,10 @@ download()
 		if [[ $WITH_TRAFFIC -eq 1 ]]; then
 			echo $CURL -L -s -o \""${MAPS}/${1},${2}.png.traffic\""\
 					\""${TRAFFIC}&v=${5}&level=${3}&x=${1/-/M}&y=${2/-/M}\"" \&
+		fi
+		if [[ $WITH_TRANSPORT -eq 1 ]]; then
+			echo $CURL -L -s -o \""${MAPS}/${1},${2}.png.transport\""\
+					\""${SERVER}u=x=${1/-/M};y=${2/-/M};z=${3};v=${VER_DEFAULT};type=trans&fm=47\"" \&
 		fi
 	fi
 }

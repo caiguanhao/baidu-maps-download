@@ -43,6 +43,11 @@ for (( i = 0; i < ${#PIECES[@]}; i++ )); do
 				-geometry +0+0 -composite "${PIECES[$i]}"
 		$DRY_RUN rm -f "${PIECES[$i]}.traffic"
 	fi
+	if [[ -f "${PIECES[$i]}.transport" ]]; then
+		$DRY_RUN $CONVERT "${PIECES[$i]}" "${PIECES[$i]}.transport"\
+				-geometry +0+0 -composite "${PIECES[$i]}"
+		$DRY_RUN rm -f "${PIECES[$i]}.transport"
+	fi
 	N=${PIECES[$i]/${MAPS}\//}
 	N=${N%.*}
 	X[${#X[@]}]=${N%%,*}
