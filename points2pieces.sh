@@ -25,6 +25,10 @@ do
 			shift
 			WITH_TRANSPORT=1
 			;;
+		--with-transport-alt)
+			shift
+			WITH_TRANSPORT=2
+			;;
 	esac
 done
 
@@ -56,11 +60,16 @@ fi
 VER_DEFAULT="015"
 VER=$VER_DEFAULT
 
+TRANS_MODE=47
+
 case $6 in
 	sate)
 		TYPE=sate
 		MODE=46
 		VER="009"
+		if [[ $WITH_TRANSPORT -eq 2 ]]; then
+			TRANS_MODE=48
+		fi
 		;;
 	web-alt)
 		TYPE=web
@@ -121,9 +130,9 @@ download()
 				$CURL -L -s -o "${MAPS}/${1},${2}.png.traffic"\
 					"${TRAFFIC}&v=${5}&level=${3}&x=${1/-/M}&y=${2/-/M}" &
 			fi
-			if [[ $WITH_TRANSPORT -eq 1 ]]; then
+			if [[ $WITH_TRANSPORT -gt 0 ]]; then
 				$CURL -L -s -o "${MAPS}/${1},${2}.png.transport"\
-					"${SERVER}u=x=${1/-/M};y=${2/-/M};z=${3};v=${VER_DEFAULT};type=trans&fm=47" &
+					"${SERVER}u=x=${1/-/M};y=${2/-/M};z=${3};v=${VER_DEFAULT};type=trans&fm=${TRANS_MODE}" &
 			fi
 		fi
 	else
@@ -133,9 +142,9 @@ download()
 			echo $CURL -L -s -o \""${MAPS}/${1},${2}.png.traffic\""\
 					\""${TRAFFIC}&v=${5}&level=${3}&x=${1/-/M}&y=${2/-/M}\"" \&
 		fi
-		if [[ $WITH_TRANSPORT -eq 1 ]]; then
+		if [[ $WITH_TRANSPORT -gt 0 ]]; then
 			echo $CURL -L -s -o \""${MAPS}/${1},${2}.png.transport\""\
-					\""${SERVER}u=x=${1/-/M};y=${2/-/M};z=${3};v=${VER_DEFAULT};type=trans&fm=47\"" \&
+					\""${SERVER}u=x=${1/-/M};y=${2/-/M};z=${3};v=${VER_DEFAULT};type=trans&fm=${TRANS_MODE}\"" \&
 		fi
 	fi
 }
