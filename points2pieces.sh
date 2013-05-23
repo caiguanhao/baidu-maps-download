@@ -48,10 +48,13 @@ else
 	LEVEL=12
 fi
 
+VER="015"
+
 case $6 in
 	sate)
 		TYPE=sate
 		MODE=46
+		VER="009"
 		;;
 	web-alt)
 		TYPE=web
@@ -69,8 +72,6 @@ case $6 in
 		MODE=44
 		;;
 esac
-
-VER="015"
 
 MAPS="`pwd`/maps"
 

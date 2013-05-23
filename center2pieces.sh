@@ -42,10 +42,13 @@ else
 	LEVEL=12
 fi
 
+VER="015"
+
 case $4 in
 	sate)
 		TYPE=sate
 		MODE=46
+		VER="009"
 		;;
 	web-alt)
 		TYPE=web
@@ -77,8 +80,6 @@ else
 fi
 
 TILE_SIZE=256
-
-VER="015"
 
 MAPS="`pwd`/maps"
 
