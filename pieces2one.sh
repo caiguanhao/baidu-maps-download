@@ -3,7 +3,14 @@
 CONVERT=$(which convert)
 
 if [[ ${#CONVERT} -eq 0 ]]; then
-    echo "Install ImageMagick first."
+    echo -n "Install ImageMagick first"
+    if [[ $(which brew) != "" ]]; then
+        echo ": brew install imagemagick"
+    elif [[ $(which apt-get) != "" ]]; then
+        echo ": sudo apt-get install imagemagick"
+    else
+        echo "."
+    fi
     exit 1
 fi
 
