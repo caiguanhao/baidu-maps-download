@@ -1,0 +1,7 @@
+language: bash
+install:
+  - sudo apt-get install bc imagemagick
+script:
+  - bash center2pieces.sh 12616085.15, 2628677.18 15 web-alt 500 500 | xargs bash pieces2one.sh
+  - bash points2pieces.sh 12550000.00, 2650000.00 12650000.00, 2550000.00 && bash pieces2one.sh
+
