@@ -64,7 +64,7 @@ Examples
 Requirements
 ------------
 
-* [Wget](http://www.gnu.org/software/wget/) or [cURL](http://curl.haxx.se/)
+* [GNU Wget](http://www.gnu.org/software/wget/) or [cURL](http://curl.haxx.se/)
 * [ImageMagick](http://www.imagemagick.org/)
 * [bc](http://www.gnu.org/software/bc/)
 
