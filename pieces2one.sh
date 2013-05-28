@@ -8,6 +8,8 @@ if [[ ${#CONVERT} -eq 0 ]]; then
         echo ": brew install imagemagick"
     elif [[ $(which apt-get) != "" ]]; then
         echo ": sudo apt-get install imagemagick"
+    elif [[ $(which yum) != "" ]]; then
+        echo ": yum install imagemagick"
     else
         echo "."
     fi
