@@ -1,10 +1,24 @@
 #!/bin/bash
 
-set -e
-
 BC=$(which bc)
 
+if [[ ${#BC} -eq 0 ]]; then
+    echo "Install bc first."
+    exit 1
+fi
+
+WGET=$(which wget)
 CURL=$(which curl)
+if [[ ${#WGET} -eq 0 ]]; then
+    if [[ ${#CURL} -eq 0 ]]; then
+        echo "Install wget or curl first."
+        exit 1
+    else
+        DOWNLOAD="$CURL -L -s -o"
+    fi
+else
+    DOWNLOAD="$WGET --quiet -O"
+fi
 
 DRY_RUN=""
 WITH_TRAFFIC=0
@@ -124,26 +138,26 @@ download()
 
     if [[ ${#DRY_RUN} -eq 0 ]]; then
         if [[ ! -f "${MAPS}/${1},${2}.png" ]]; then
-            $CURL -L -s -o "${MAPS}/${1},${2}.png"\
+            $DOWNLOAD "${MAPS}/${1},${2}.png"\
                 "${SERVER}u=x=${1/-/M};y=${2/-/M};z=${3};v=${5};type=${4}&fm=${6}" &
             if [[ $WITH_TRAFFIC -eq 1 ]]; then
-                $CURL -L -s -o "${MAPS}/${1},${2}.png.traffic"\
+                $DOWNLOAD "${MAPS}/${1},${2}.png.traffic"\
                     "${TRAFFIC}&v=${5}&level=${3}&x=${1/-/M}&y=${2/-/M}" &
             fi
             if [[ $WITH_TRANSPORT -gt 0 ]]; then
-                $CURL -L -s -o "${MAPS}/${1},${2}.png.transport"\
+                $DOWNLOAD "${MAPS}/${1},${2}.png.transport"\
                     "${SERVER}u=x=${1/-/M};y=${2/-/M};z=${3};v=${VER_DEFAULT};type=trans&fm=${TRANS_MODE}" &
             fi
         fi
     else
-        echo $CURL -L -s -o \""${MAPS}/${1},${2}.png\""\
+        echo $DOWNLOAD \""${MAPS}/${1},${2}.png\""\
                 \""${SERVER}u=x=${1/-/M};y=${2/-/M};z=${3};v=${5};type=${4}&fm=${6}\"" \&
         if [[ $WITH_TRAFFIC -eq 1 ]]; then
-            echo $CURL -L -s -o \""${MAPS}/${1},${2}.png.traffic\""\
+            echo $DOWNLOAD \""${MAPS}/${1},${2}.png.traffic\""\
                     \""${TRAFFIC}&v=${5}&level=${3}&x=${1/-/M}&y=${2/-/M}\"" \&
         fi
         if [[ $WITH_TRANSPORT -gt 0 ]]; then
-            echo $CURL -L -s -o \""${MAPS}/${1},${2}.png.transport\""\
+            echo $DOWNLOAD \""${MAPS}/${1},${2}.png.transport\""\
                     \""${SERVER}u=x=${1/-/M};y=${2/-/M};z=${3};v=${VER_DEFAULT};type=trans&fm=${TRANS_MODE}\"" \&
         fi
     fi
