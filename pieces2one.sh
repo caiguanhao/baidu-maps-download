@@ -1,8 +1,11 @@
 #!/bin/bash
 
-set -e
-
 CONVERT=$(which convert)
+
+if [[ ${#CONVERT} -eq 0 ]]; then
+    echo "Install ImageMagick first."
+    exit 1
+fi
 
 MAPS="`pwd`/maps"
 
