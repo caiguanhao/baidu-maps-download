@@ -1,6 +1,8 @@
 Baidu Maps Download
 ===================
 
+[![Build Status](https://travis-ci.org/caiguanhao/baidu-maps-download.png?branch=master)](https://travis-ci.org/caiguanhao/baidu-maps-download)
+
 Download Baidu Maps to one PNG image file. Points used here are not coordinates. You may use another BASH tool called [Baidu Maps Coordinates Utils](https://github.com/caiguanhao/baidu-maps-coord-utils) to convert coordinates to points.
 
 Usage
