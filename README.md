@@ -20,12 +20,10 @@ Type can be ``web`` (default), ``web-alt`` (bigger font size, good for printing 
 Start Point (``sp``) is the top-left point of the map while End Point (``ep``) is the bottom-right point.
 
     bash points2pieces.sh [OPTION] sp_x sp_y ep_x ep_y [level=12 [type=web]]
-    
+
     Options:
         --dry-run              Show list of commands instead of executing them.
         --with-traffic         Also download the traffic layer.
-        --with-transport       Also download the transport layer. Valid if type is sate.
-        --with-transport-alt   Also download the transport layer with bigger font. Valid if type is sate.
 
 #### Center Point
 
@@ -34,12 +32,10 @@ You can specify the ``width`` and ``height`` of the map.
 This script will output a ``crop`` option which can be used as argument of ``pieces2one.sh`` script.
 
     bash center2pieces.sh [OPTION] cp_x cp_y [level=12 [type=web [width=2000 [height=2000]]]]
-    
+
     Options:
         --dry-run              Show list of commands instead of executing them.
         --with-traffic         Also download the traffic layer.
-        --with-transport       Also download the transport layer. Valid if type is sate.
-        --with-transport-alt   Also download the transport layer with bigger font. Valid if type is sate.
 
 ### Concatenate map pieces
 
@@ -48,7 +44,7 @@ You can specify [``crop``](http://www.imagemagick.org/Usage/crop/) option for th
 All layers will merge automatically. Map pieces, layers and intermediate files will be deleted.
 
     bash pieces2one.sh [OPTION] [crop]
-    
+
     Options:
         --dry-run        Show list of commands instead of executing them.
 
@@ -81,7 +77,7 @@ Optimizations
 You can reduce the file size (up to 50%) of the output PNG image files by using [pngcrush](http://pmt.sourceforge.net/pngcrush/) and/or [optipng](http://optipng.sourceforge.net/):
 
     (cd maps && pngcrush -rem cHRM -rem gAMA -rem iCCP -rem sRGB -q done.png done_o.png && mv done_o.png done.png)
-    
+
     (cd maps && optipng -quiet -fix -o4 done.png)
 
 See Also

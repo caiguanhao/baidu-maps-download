@@ -22,26 +22,18 @@ fi
 
 DRY_RUN=""
 WITH_TRAFFIC=0
-WITH_TRANSPORT=0
 for arg in "$@"
 do
     case "$arg" in
         --dry-run)
             shift
             DRY_RUN="echo"
+            DOWNLOAD="$DRY_RUN $DOWNLOAD"
             echo "#!/bin/bash"
             ;;
         --with-traffic)
             shift
             WITH_TRAFFIC=1
-            ;;
-        --with-transport)
-            shift
-            WITH_TRANSPORT=1
-            ;;
-        --with-transport-alt)
-            shift
-            WITH_TRANSPORT=2
             ;;
     esac
 done
@@ -51,9 +43,9 @@ ARG_2=$2
 ARG_3=${3//,/}
 ARG_4=$4
 
-if [[ $ARG_1 =~ ^[+-]?[0-9]*\.?[0-9]+$ ]] && 
-   [[ $ARG_2 =~ ^[+-]?[0-9]*\.?[0-9]+$ ]] && 
-   [[ $ARG_3 =~ ^[+-]?[0-9]*\.?[0-9]+$ ]] && 
+if [[ $ARG_1 =~ ^[+-]?[0-9]*\.?[0-9]+$ ]] &&
+   [[ $ARG_2 =~ ^[+-]?[0-9]*\.?[0-9]+$ ]] &&
+   [[ $ARG_3 =~ ^[+-]?[0-9]*\.?[0-9]+$ ]] &&
    [[ $ARG_4 =~ ^[+-]?[0-9]*\.?[0-9]+$ ]]
 then
     START_X=$ARG_1
@@ -74,16 +66,11 @@ fi
 VER_DEFAULT="015"
 VER=$VER_DEFAULT
 
-TRANS_MODE=47
-
 case $6 in
     sate)
         TYPE=sate
         MODE=46
         VER="009"
-        if [[ $WITH_TRANSPORT -eq 2 ]]; then
-            TRANS_MODE=48
-        fi
         ;;
     web-alt)
         TYPE=web
@@ -95,12 +82,12 @@ case $6 in
         if [[ $WITH_TRAFFIC -eq 1 ]]; then
             MODE=44
         fi
-        WITH_TRANSPORT=0
+        STYLES=ph
         ;;
     *)
         TYPE=web
         MODE=44
-        WITH_TRANSPORT=0
+        STYLES=pl
         ;;
 esac
 
@@ -130,35 +117,40 @@ set_block_num_of()
     eval "${5}=\${BN}"
 }
 
+TRAFFIC="http://its.map.baidu.com:8002/traffic/TrafficTileService?time=0&label=web2D"
+
 download()
 {
-    SERVER=$((RANDOM%8+1))
-    SERVER="http://q${SERVER}.baidu.com/it/"
-    TRAFFIC="http://its.map.baidu.com:8002/traffic/TrafficTileService?time=0&label=web2D"
-
-    if [[ ${#DRY_RUN} -eq 0 ]]; then
-        if [[ ! -f "${MAPS}/${1},${2}.png" ]]; then
-            $DOWNLOAD "${MAPS}/${1},${2}.png"\
-                "${SERVER}u=x=${1/-/M};y=${2/-/M};z=${3};v=${5};type=${4}&fm=${6}" &
+    SERVER=$((RANDOM%9+1))
+    if [[ ! -f "${MAPS}/${1},${2}.png" ]]; then
+        if [[ ${#DRY_RUN} -eq 0 ]]; then
+            if [[ $TYPE == "sate" ]]; then
+                SERVER="http://shangetu${SERVER}.map.bdimg.com/it/"
+                $DOWNLOAD "${MAPS}/${1},${2}.png"\
+                    "${SERVER}u=x=${1/-/M};y=${2/-/M};z=${3};v=${5};type=${4}&fm=${6}" &
+            else
+                SERVER="http://online${SERVER}.map.bdimg.com/tile/?qt=tile&"
+                $DOWNLOAD "${MAPS}/${1},${2}.png"\
+                    "${SERVER}x=${1/-/M}&y=${2/-/M}&z=${3}&styles=${7}" &
+            fi
             if [[ $WITH_TRAFFIC -eq 1 ]]; then
                 $DOWNLOAD "${MAPS}/${1},${2}.png.traffic"\
                     "${TRAFFIC}&v=${5}&level=${3}&x=${1/-/M}&y=${2/-/M}" &
             fi
-            if [[ $WITH_TRANSPORT -gt 0 ]]; then
-                $DOWNLOAD "${MAPS}/${1},${2}.png.transport"\
-                    "${SERVER}u=x=${1/-/M};y=${2/-/M};z=${3};v=${VER_DEFAULT};type=trans&fm=${TRANS_MODE}" &
+        else
+            if [[ $TYPE == "sate" ]]; then
+                SERVER="http://shangetu${SERVER}.map.bdimg.com/it/"
+                $DOWNLOAD \""${MAPS}/${1},${2}.png\""\
+                    \""${SERVER}u=x=${1/-/M};y=${2/-/M};z=${3};v=${5};type=${4}&fm=${6}\"" \&
+            else
+                SERVER="http://online${SERVER}.map.bdimg.com/tile/?qt=tile&"
+                $DOWNLOAD \""${MAPS}/${1},${2}.png\""\
+                    \""${SERVER}x=${1/-/M}&y=${2/-/M}&z=${3}&styles=${7}\"" \&
             fi
-        fi
-    else
-        echo $DOWNLOAD \""${MAPS}/${1},${2}.png\""\
-                \""${SERVER}u=x=${1/-/M};y=${2/-/M};z=${3};v=${5};type=${4}&fm=${6}\"" \&
-        if [[ $WITH_TRAFFIC -eq 1 ]]; then
-            echo $DOWNLOAD \""${MAPS}/${1},${2}.png.traffic\""\
+            if [[ $WITH_TRAFFIC -eq 1 ]]; then
+                $DOWNLOAD \""${MAPS}/${1},${2}.png.traffic\""\
                     \""${TRAFFIC}&v=${5}&level=${3}&x=${1/-/M}&y=${2/-/M}\"" \&
-        fi
-        if [[ $WITH_TRANSPORT -gt 0 ]]; then
-            echo $DOWNLOAD \""${MAPS}/${1},${2}.png.transport\""\
-                    \""${SERVER}u=x=${1/-/M};y=${2/-/M};z=${3};v=${VER_DEFAULT};type=trans&fm=${TRANS_MODE}\"" \&
+            fi
         fi
     fi
 }
@@ -170,19 +162,19 @@ set_block_num_of END_X at_level LEVEL to END_BLOCK_X
 set_block_num_of END_Y at_level LEVEL to END_BLOCK_Y
 
 if [[ $START_BLOCK_X -eq $END_BLOCK_X ]] && [[ $START_BLOCK_Y -eq $END_BLOCK_Y ]]; then
-    download $START_BLOCK_X $END_BLOCK_X $LEVEL $TYPE $VER $MODE
+    download $START_BLOCK_X $END_BLOCK_X $LEVEL $TYPE $VER $MODE $STYLES
 elif [[ $START_BLOCK_X -eq $END_BLOCK_X ]] && [[ $START_BLOCK_Y -gt $END_BLOCK_Y ]]; then
     for (( J=$END_BLOCK_Y ; J<$START_BLOCK_Y ; J++ )) ; do
-        download $START_BLOCK_X $J $LEVEL $TYPE $VER $MODE
+        download $START_BLOCK_X $J $LEVEL $TYPE $VER $MODE $STYLES
     done
 elif [[ $START_BLOCK_X -lt $END_BLOCK_X ]] && [[ $START_BLOCK_Y -eq $END_BLOCK_Y ]]; then
     for (( J=$START_BLOCK_X; J<$END_BLOCK_X; J++ )) ; do
-        download $J $START_BLOCK_Y $LEVEL $TYPE $VER $MODE
+        download $J $START_BLOCK_Y $LEVEL $TYPE $VER $MODE $STYLES
     done
 elif [[ $START_BLOCK_X -lt $END_BLOCK_X ]] && [[ $START_BLOCK_Y -gt $END_BLOCK_Y ]]; then
     for (( J=$START_BLOCK_Y; J>$END_BLOCK_Y; J-- )) ; do
         for (( K=$START_BLOCK_X; K<$END_BLOCK_X; K++ )) ; do
-            download $K $J $LEVEL $TYPE $VER $MODE
+            download $K $J $LEVEL $TYPE $VER $MODE $STYLES
         done
         $DRY_RUN wait
     done
